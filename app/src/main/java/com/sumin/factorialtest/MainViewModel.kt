@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sumin.factorialtest.Result
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -24,9 +25,9 @@ class MainViewModel : ViewModel() {
      */
 
     fun calculate(value: String?) {
-        _state.value = State(isInProgress = true)
+        _state.value = Progress
         if (value.isNullOrBlank()) {
-            _state.value = State(isError = true)
+            _state.value = Error
             return
         }
         val number = value.toLong()
@@ -34,7 +35,7 @@ class MainViewModel : ViewModel() {
         // calculate
         viewModelScope.launch {
             delay(2000)
-            _state.value = State(factorial = number.toString())
+            _state.value = Result(factorial = number.toString())
         }
     }
 }
