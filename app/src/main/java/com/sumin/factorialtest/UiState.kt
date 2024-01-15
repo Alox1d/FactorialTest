@@ -1,7 +1,7 @@
 package com.sumin.factorialtest
 
-class UiState(
-    val isError: Boolean = false,
-    val isInProgress: Boolean = false,
-    val factorial: String = ""
-)
+sealed class UiState
+
+object Error : UiState()
+object Progress : UiState()
+class Result(val factorial: String) : UiState()

@@ -1,10 +1,12 @@
 package com.sumin.factorialtest
 
+import android.text.Editable.Factory
 import androidx.lifecycle.Lifecycle.State
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sumin.factorialtest.Result
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -14,22 +16,16 @@ class MainViewModel : ViewModel() {
     val state: LiveData<UiState> = _state
 
     fun calculate(value: String?) {
-        _state.value = UiState(
-            isInProgress = true,
-        )
+        _state.value = Progress
         if (value.isNullOrBlank()) {
-            _state.value = UiState(
-                isError = true
-            )
+            _state.value = Error
             return
         }
         viewModelScope.launch {
             val number = value.toLong()
             // calculate
             delay(1000)
-            _state.value = UiState(
-                factorial = number.toString()
-            )
+            _state.value = Result(factorial = number.toString())
         }
     }
 }
