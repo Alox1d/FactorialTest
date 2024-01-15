@@ -1,14 +1,13 @@
 package com.sumin.factorialtest
 
-import android.text.Editable.Factory
-import androidx.lifecycle.Lifecycle.State
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sumin.factorialtest.Result
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.math.BigInteger
 
 class MainViewModel : ViewModel() {
 
@@ -23,9 +22,16 @@ class MainViewModel : ViewModel() {
         }
         viewModelScope.launch {
             val number = value.toLong()
-            // calculate
-            delay(1000)
-            _state.value = Result(factorial = number.toString())
+            val result = factorial(number)
+            _state.value = Result(factorial = result)
         }
+    }
+
+    private suspend fun factorial(number: Long): String = withContext(Dispatchers.Default) {
+        var result = BigInteger.ONE
+        for (i in 1..number) {
+            result = result.multiply(BigInteger.valueOf(i))
+        }
+        return@withContext result.toString()
     }
 }
