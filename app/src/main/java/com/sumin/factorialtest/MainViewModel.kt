@@ -1,5 +1,6 @@
 package com.sumin.factorialtest
 
+import androidx.lifecycle.Lifecycle.State
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,28 +9,27 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
-    private val _error = MutableLiveData<Boolean>()
-    val error: LiveData<Boolean> = _error
 
-    private val _factorial = MutableLiveData<String>()
-    val factorial: LiveData<String> = _factorial
-
-    private val _progress = MutableLiveData<Boolean>()
-    val progress: LiveData<Boolean> = _progress
+    private val _state = MutableLiveData<UiState>()
+    val state: LiveData<UiState> = _state
 
     fun calculate(value: String?) {
-        _progress.value = true
+        _state.value = UiState(
+            isInProgress = true,
+        )
         if (value.isNullOrBlank()) {
-            _progress.value = false
-            _error.value = true
+            _state.value = UiState(
+                isError = true
+            )
             return
         }
         viewModelScope.launch {
             val number = value.toLong()
             // calculate
             delay(1000)
-            _progress.value = false
-            _factorial.value = number.toString()
+            _state.value = UiState(
+                factorial = number.toString()
+            )
         }
     }
 }
